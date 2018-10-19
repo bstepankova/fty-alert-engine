@@ -1,0 +1,24 @@
+{
+    "flexible" : {
+        "name"          :   "warranty",
+	"description"   :   "TRANSLATE_LUA(Warranty expires in)",
+        "rule_cat"      :   ["CAT_ALL"],
+        "metrics"       :   ["^end_warranty_date@.+"],
+	"assets"        :   [".*"],
+        "variables"     :   { "low_warning":"60", "low_critical":"10"},
+        "results"       :   {
+                                "low_critical"  : { "action" : [{ "action": "EMAIL" }, { "action": "SMS" } ]},
+                                "low_warning"   : { "action" : [{ "action": "EMAIL" }, { "action": "SMS" }]}
+                            },
+        "evaluation"    : "
+	    function main(value)
+                if( value <= low_critical ) then
+                    return LOW_CRITICAL, string.format('{\"key\": \"TRANSLATE_LUA( Warranty for {{ename}} expires in {{days}} days.)\", \"variables\": {\"ename\" : \"%s\", \"days\" : \"%s\"}}', NAME, value)
+                end
+                if ( value <= low_warning ) then
+                    return LOW_WARNING, string.format('{\"key\": \"TRANSLATE_LUA( Warranty for {{ename}} expires in {{days}} days.)\", \"variables\": {\"ename\" : \"%s\", \"days\" : \"%s\"}}', NAME, value)
+		end
+                return OK
+            end"
+    }
+}
