@@ -13,10 +13,13 @@
         "evaluation"    : "
 	    function main(value)
                 if( value <= low_critical ) then
-                    return LOW_CRITICAL, string.format('{\"key\": \"TRANSLATE_LUA( Warranty for {{ename}} expires in {{days}} days.)\", \"variables\": {\"ename\" : \"%s\", \"days\" : \"%s\"}}', NAME, value)
+                    return LOW_CRITICAL, string.format('{\"key\": \"TRANSLATE_LUA(Warranty for {{ename}} expires in {{days}} days.)\", \"variables\": {\"ename\" : \"%s\", \"days\" : \"%s\"}}', NAME, value)
                 end
                 if ( value <= low_warning ) then
-                    return LOW_WARNING, string.format('{\"key\": \"TRANSLATE_LUA( Warranty for {{ename}} expires in {{days}} days.)\", \"variables\": {\"ename\" : \"%s\", \"days\" : \"%s\"}}', NAME, value)
+                    return LOW_WARNING, string.format('{\"key\": \"TRANSLATE_LUA(Warranty for {{ename}} expires in {{days}} days.)\", \"variables\": {\"ename\" : \"%s\", \"days\" : \"%s\"}}', NAME, value)
+		end
+                if ( value < 0) then
+                    return LOW_CRITICAL, string.format('{\"key\": \"TRANSLATE_LUA(Warranty for {{expired}} {{days}} days ago.)\", \"variables\": {\"ename\" : \"%s\", \"days\" : \"%s\"}}', NAME, math.abs(value))
 		end
                 return OK
             end"
